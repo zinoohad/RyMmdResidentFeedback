@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>התייחסות דיירים לתכנון מיקום ממ״ד</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="public-shell">
+    <header class="hero">
+      <div class="hero-content">
+        <div class="pill">פרויקט תוספת ממ״דים</div>
+        <h1>התייחסות דיירים לתכנון מיקום ממ״ד</h1>
+        <p>שלום,<br>במסגרת פרויקט תוספת ממ״דים מוצגת לכם התוכנית הרלוונטית למבנה / לדירה שלכם.</p>
+        <p>מטרת הטופס היא לאפשר לכם להעביר התייחסויות נקודתיות ביחס למיקום הממ״ד המוצע, בדגש על נושאים שאולי לא זוהו בשלב התכנון: גישה, תשתיות, צמחייה, פירוקים, שימושים קיימים, מגבלות בטיחות או השפעה על הדירה והחצר.</p>
+        <p class="strong-note">הטופס אינו מיועד לפתיחה מחודשת של כל התכנון, אלא להצפת מידע חשוב שלא נלקח בחשבון.</p>
+      </div>
+    </header>
+
+    <main class="form-layout">
+      <section id="alert" class="alert hidden"></section>
+      <section class="card progress-card">
+        <div class="progress-title"><span id="stepLabel">שלב 1 מתוך 8</span><span id="saveState">לא נשלח</span></div>
+        <div class="progress"><i id="progressBar"></i></div>
+      </section>
+
+      <form id="feedbackForm" class="card" autocomplete="off">
+        <section class="step active" data-step="1">
+          <h2>1. פרטי זיהוי</h2>
+          <div class="grid two">
+            <label>שם ממלא הטופס<input name="submitterName" required /></label>
+            <label>טלפון ליצירת קשר<input name="phone" required inputmode="tel" /></label>
+            <label>כתובת דוא״ל<input name="email" type="email" /></label>
+            <label>אזור / שכונה<select name="area" id="areaSelect" required></select></label>
+            <label>מספר מבנה<select name="buildingNumber" id="buildingNumber" required><option value="">בחר אזור קודם</option></select></label>
+            <label>מספר דירה / יחידה<select name="unitNumber" id="unitNumber" required><option value="">בחר מבנה קודם</option></select></label>
+            <label>האם אתה הדייר המתגורר בדירה?<select name="residentRelation" required><option value="">בחר</option><option>כן</option><option>לא</option><option>אחר</option></select></label>
+          </div>
+          <p class="hint">הרשימות נשלפות אוטומטית מגיליון <b>דיירים</b> בקובץ ה־Google Sheets. אין צורך להזין שמות משפחה.</p>
+          <button type="button" class="btn ghost" id="loadPlanBtn">בדיקת תוכנית לפי מבנה / דירה</button>
+          <div id="planResult" class="plan-result"></div>
+        </section>
+
+        <section class="step" data-step="2">
+          <h2>2. אישור צפייה בתוכנית</h2>
+          <div class="grid two">
+            <label>האם הוצגה לך תוכנית מיקום הממ״ד הרלוונטית לדירה / למבנה שלך?<select name="planPresented" required><option value="">בחר</option><option>כן</option><option>לא</option></select></label>
+            <label>האם המיקום המוצע ברור לך?<select name="planClear" required><option value="">בחר</option><option>כן</option><option>לא</option><option>חלקית</option></select></label>
+            <label>האם נדרש לך הסבר נוסף על התוכנית?<select name="needsExplanation" required><option value="">בחר</option><option>כן</option><option>לא</option></select></label>
+          </div>
+          <p class="hint">אם נדרש הסבר נוסף, ההתייחסות תסומן אוטומטית גם כבקשה להבהרה / הסבר.</p>
+        </section>
+
+        <section class="step" data-step="3">
+          <h2>3. סוג ההתייחסות</h2>
+          <p class="hint">ניתן לבחור יותר מאפשרות אחת. זה שדה קריטי לסיווג נכון.</p>
+          <div class="checks" data-name="feedbackTypes">
+            <label><input type="checkbox" value="הערה תכנונית"> הערה תכנונית</label>
+            <label><input type="checkbox" value="הערה ביצועית"> הערה ביצועית</label>
+            <label><input type="checkbox" value="הערת בטיחות"> הערת בטיחות</label>
+            <label><input type="checkbox" value="הערה בנושא תשתיות"> הערה בנושא תשתיות</label>
+            <label><input type="checkbox" value="הערה בנושא גישה לכלים / ציוד"> הערה בנושא גישה לכלים / ציוד</label>
+            <label><input type="checkbox" value="הערה בנושא צמחייה / עצים"> הערה בנושא צמחייה / עצים</label>
+            <label><input type="checkbox" value="הערה בנושא פירוקים נדרשים"> הערה בנושא פירוקים נדרשים</label>
+            <label><input type="checkbox" value="בקשה להבהרה / הסבר"> בקשה להבהרה / הסבר</label>
+            <label><input type="checkbox" value="אחר"> אחר</label>
+          </div>
+        </section>
+
+        <section class="step" data-step="4">
+          <h2>4. פירוט ההתייחסות</h2>
+          <div class="grid two">
+            <label>תאר/י את ההתייחסות בצורה ברורה<textarea name="description" required></textarea></label>
+            <label>איפה בדיוק נמצאת הבעיה / ההערה?<textarea name="locationDescription" required></textarea></label>
+            <label>האם לדעתך הנושא משפיע על מיקום הממ״ד?<select name="planningImpactResident" required><option value="">בחר</option><option>כן</option><option>לא</option><option>לא יודע</option></select></label>
+            <label>האם לדעתך הנושא משפיע על אופן הביצוע?<select name="executionImpactResident" required><option value="">בחר</option><option>כן</option><option>לא</option><option>לא יודע</option></select></label>
+            <label>האם לדעתך קיימת כאן בעיית בטיחות?<select name="safetyImpactResident" required><option value="">בחר</option><option>כן</option><option>לא</option><option>לא יודע</option></select></label>
+          </div>
+        </section>
+
+        <section class="step" data-step="5">
+          <h2>5. נושאים ספציפיים לבדיקה</h2>
+          <div class="checks compact" data-name="relatedTopics">
+            <label><input type="checkbox" value="חלון קיים"> חלון קיים</label>
+            <label><input type="checkbox" value="דלת / מעבר"> דלת / מעבר</label>
+            <label><input type="checkbox" value="פרגולה"> פרגולה</label>
+            <label><input type="checkbox" value="ארון חיצוני / פנימי"> ארון חיצוני / פנימי</label>
+            <label><input type="checkbox" value="מטבח או חלק ממטבח"> מטבח או חלק ממטבח</label>
+            <label><input type="checkbox" value="תשתית חשמל"> תשתית חשמל</label>
+            <label><input type="checkbox" value="תשתית מים"> תשתית מים</label>
+            <label><input type="checkbox" value="תשתית ביוב / ניקוז"> תשתית ביוב / ניקוז</label>
+            <label><input type="checkbox" value="תקשורת"> תקשורת</label>
+            <label><input type="checkbox" value="שביל / מדרכה / גישה"> שביל / מדרכה / גישה</label>
+            <label><input type="checkbox" value="עץ"> עץ</label>
+            <label><input type="checkbox" value="צמחייה / גינה"> צמחייה / גינה</label>
+            <label><input type="checkbox" value="חניה"> חניה</label>
+            <label><input type="checkbox" value="שימוש קיים בחצר"> שימוש קיים בחצר</label>
+            <label><input type="checkbox" value="קיר / גדר / מחסן"> קיר / גדר / מחסן</label>
+            <label><input type="checkbox" value="אחר"> אחר</label>
+          </div>
+        </section>
+
+        <section class="step" data-step="6">
+          <h2>6. העלאת תמונות / קבצים</h2>
+          <p class="hint">ניתן לצרף תמונות של האזור הרלוונטי, תשתיות קיימות, צמחייה, פירוקים נדרשים, פתחים, מעברים או כל פרט אחר שיכול לעזור להבין את ההתייחסות.</p>
+          <div class="upload-box">
+            <label>סוג הקובץ / התמונה<select id="fileCategory"><option>כללי</option><option>מיקום ממ״ד</option><option>תשתיות</option><option>גישה</option><option>צמחייה / עצים</option><option>פירוקים</option><option>פנים הדירה</option><option>בטיחות</option></select></label>
+            <label>בחירת קבצים<input id="filesInput" type="file" multiple accept="image/*,application/pdf" /></label>
+            <p class="hint">עד 5 קבצים, עד 10MB לכל קובץ. סוגי קבצים: תמונות ו־PDF.</p>
+          </div>
+          <div id="filePreview" class="file-preview"></div>
+        </section>
+
+        <section class="step" data-step="7">
+          <h2>7. רמת דחיפות / חשיבות</h2>
+          <label>עד כמה הנושא לדעתך מהותי?<select name="importance" required>
+            <option value="">בחר</option>
+            <option>מהותי מאוד — עלול למנוע ביצוע / להשפיע על בטיחות</option>
+            <option>מהותי — דורש בדיקה לפני ביצוע</option>
+            <option>בינוני — חשוב להתייחסות אך לא בהכרח מעכב</option>
+            <option>נמוך — בקשה / הערה כללית</option>
+            <option>לא יודע</option>
+          </select></label>
+        </section>
+
+        <section class="step" data-step="8">
+          <h2>8. סיכום ואישור</h2>
+          <label class="approval"><input name="approval" type="checkbox" value="מאשר/ת" required> אני מאשר/ת שההתייחסות נמסרת לטובת בדיקת צוות הפרויקט, וכי צוות הפרויקט יסווג את ההתייחסות לפי השפעה תכנונית, ביצועית, בטיחותית או בקשה להבהרה.</label>
+          <div class="summary-box" id="summaryBox"></div>
+        </section>
+
+        <div class="form-actions">
+          <button type="button" class="btn secondary" id="prevBtn">חזרה</button>
+          <button type="button" class="btn primary" id="nextBtn">המשך</button>
+          <button type="submit" class="btn primary hidden" id="submitBtn">שליחת התייחסות</button>
+        </div>
+      </form>
+    </main>
+  </div>
+  <iframe id="transportFrame" name="transportFrame" class="hidden"></iframe>
+  <div id="toast" class="toast hidden"></div>
+  <script src="config.js"></script>
+  <script src="shared.js"></script>
+  <script src="public.js"></script>
+</body>
+</html>

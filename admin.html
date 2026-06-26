@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard התייחסויות דיירים</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="admin-shell">
+    <aside class="admin-side">
+      <div class="brand"><div class="brand-icon">ד</div><div><h1>דשבורד התייחסויות</h1><p>צוות פרויקט ממ״דים</p></div></div>
+      <button class="nav active" data-view="dashboard">Dashboard</button>
+      <button class="nav" data-view="table">טבלת התייחסויות</button>
+      <button class="nav" data-view="files">קבצים ותמונות</button>
+      <button class="nav" data-view="settings">חיבור</button>
+      <a class="public-link" href="index.html">פתיחת טופס דיירים</a>
+    </aside>
+    <main class="admin-main">
+      <header class="admin-top"><div><h2 id="adminTitle">Dashboard</h2><p id="adminSubtitle">ריכוז התייחסויות, סטטוסים וחסמים</p></div><div class="admin-actions"><button class="btn secondary" id="refreshAdminBtn">רענון</button><button class="btn secondary" id="exportAdminCsvBtn">ייצוא CSV</button><button class="btn danger hidden" id="logoutBtn">התנתקות</button></div></header>
+      <section id="adminAlert" class="alert hidden"></section>
+      <section id="loginPanel" class="card login-card">
+        <h2>כניסת צוות</h2>
+        <p class="hint">הדשבורד אינו פתוח לדיירים. הכניסה דורשת סיסמת צוות שמוגדרת ב־Apps Script / גיליון ההגדרות.</p>
+        <label>סיסמת צוות<input id="adminPassword" type="password" /></label>
+        <button class="btn primary" id="loginBtn">כניסה</button>
+      </section>
+
+      <div id="adminContent" class="hidden">
+        <section id="dashboardView" class="admin-view active">
+          <div class="kpis" id="adminKpis"></div>
+          <div class="charts-grid">
+            <div class="card"><h3>סיווג צוות</h3><div id="classChart" class="bars"></div></div>
+            <div class="card"><h3>סטטוס</h3><div id="statusChart" class="bars"></div></div>
+            <div class="card"><h3>השפעה</h3><div id="impactChart" class="bars"></div></div>
+            <div class="card"><h3>אזור</h3><div id="areaChart" class="bars"></div></div>
+          </div>
+        </section>
+        <section id="tableView" class="admin-view">
+          <div class="card">
+            <div class="filters">
+              <input id="adminSearch" placeholder="חיפוש לפי מבנה, דייר, תיאור או חסם" />
+              <select id="filterStatus"><option value="">כל הסטטוסים</option></select>
+              <select id="filterClass"><option value="">כל הסיווגים</option></select>
+              <select id="filterArea"><option value="">כל האזורים</option></select>
+            </div>
+            <div class="table-wrap"><table id="feedbackTable"></table></div>
+          </div>
+        </section>
+        <section id="filesView" class="admin-view"><div class="card"><h3>קבצים ותמונות</h3><div id="filesGrid" class="files-grid"></div></div></section>
+        <section id="settingsView" class="admin-view"><div class="card"><h3>הגדרות חיבור</h3><div class="grid two"><label>Apps Script URL<input id="adminBackendUrl"></label><label>Public API Key<input id="adminPublicKey"></label></div><button class="btn primary" id="saveAdminSettings">שמירה בדפדפן</button></div></section>
+      </div>
+    </main>
+  </div>
+
+  <dialog id="editDialog"><form method="dialog" id="editForm"><h2>עדכון טיפול פנימי</h2><input type="hidden" name="feedbackId"><div class="grid two"><label>סיווג צוות<select name="teamClassification"><option></option><option>תכנונית</option><option>ביצועית</option><option>בטיחותית</option><option>הבהרה</option><option>לא רלוונטי</option></select></label><label>סטטוס<select name="status"><option>פתוח</option><option>בטיפול</option><option>ממתין להבהרה</option><option>נסגר</option></select></label><label>השפעה על תכנון<select name="planningImpactTeam"><option></option><option>כן</option><option>לא</option><option>לבדיקה</option></select></label><label>השפעה על ביצוע<select name="executionImpactTeam"><option></option><option>כן</option><option>לא</option><option>לבדיקה</option></select></label><label>השפעה בטיחותית<select name="safetyImpactTeam"><option></option><option>כן</option><option>לא</option><option>לבדיקה</option></select></label><label>דורש עדכון תוכנית<select name="requiresPlanUpdate"><option></option><option>כן</option><option>לא</option></select></label><label>דורש סיור שטח<select name="requiresSiteVisit"><option></option><option>כן</option><option>לא</option></select></label><label>דורש שיחה עם דייר<select name="requiresResidentCall"><option></option><option>כן</option><option>לא</option></select></label><label>דורש החלטת ועדת תכנון<select name="requiresPlanningCommittee"><option></option><option>כן</option><option>לא</option></select></label><label>אחראי טיפול<input name="owner"></label><label>תאריך יעד<input name="dueDate" type="date"></label></div><label>החלטה / מענה לדייר<textarea name="responseToResident"></textarea></label><div class="form-actions"><button class="btn secondary" value="cancel">ביטול</button><button class="btn primary" id="saveTreatmentBtn" value="default">שמירה</button></div></form></dialog>
+
+  <iframe id="transportFrame" name="transportFrame" class="hidden"></iframe>
+  <div id="toast" class="toast hidden"></div>
+  <script src="config.js"></script>
+  <script src="shared.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
