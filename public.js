@@ -66,7 +66,25 @@ function autoLoadPlanIfReady(){
   if (b && u) loadPlan();
 }
 
-function updateStep(){ RF.qsa('.step').forEach(s=>s.classList.toggle('active', Number(s.dataset.step)===currentStep)); RF.qs('#stepLabel').textContent=`שלב ${currentStep} מתוך 8`; RF.qs('#progressBar').style.width=`${currentStep/8*100}%`; RF.qs('#prevBtn').disabled=currentStep===1; RF.qs('#nextBtn').classList.toggle('hidden', currentStep===8); RF.qs('#submitBtn').classList.toggle('hidden', currentStep!==8); if(currentStep===8) renderSummary(); }
+function updateStep(){
+  const TOTAL = 8;
+  RF.qsa('.step').forEach(s=>s.classList.toggle('active', Number(s.dataset.step)===currentStep));
+  RF.qs('#stepLabel').textContent=`שלב ${currentStep} מתוך ${TOTAL}`;
+  RF.qs('#progressBar').style.width=`${currentStep/TOTAL*100}%`;
+  RF.qs('#prevBtn').disabled=currentStep===1;
+  RF.qs('#nextBtn').classList.toggle('hidden', currentStep===TOTAL);
+  RF.qs('#submitBtn').classList.toggle('hidden', currentStep!==TOTAL);
+  // Render dots
+  const dotsEl = RF.qs('#stepsDots');
+  if(dotsEl){
+    dotsEl.innerHTML = Array.from({length:TOTAL},(_,i)=>{
+      const n=i+1;
+      const cls = n < currentStep ? 'done' : n === currentStep ? 'active' : '';
+      return `<span class="step-dot ${cls}"></span>`;
+    }).join('');
+  }
+  if(currentStep===TOTAL) renderSummary();
+}
 function validateStep(){ const section=RF.qs(`.step[data-step="${currentStep}"]`); const fields=[...section.querySelectorAll('input,select,textarea')]; for(const f of fields){ if(!f.checkValidity()){ f.reportValidity(); return false; } } if(currentStep===3 && checked('feedbackTypes').length===0){ RF.toast('חובה לבחור לפחות סוג התייחסות אחד'); return false; } return true; }
 function nextStep(){ if(!validateStep()) return; currentStep=Math.min(8,currentStep+1); updateStep(); window.scrollTo({top:0,behavior:'smooth'}); }
 function prevStep(){ currentStep=Math.max(1,currentStep-1); updateStep(); window.scrollTo({top:0,behavior:'smooth'}); }
@@ -88,6 +106,6 @@ async function loadPlan(){
 function previewFiles(){ const files=[...RF.qs('#filesInput').files]; const max=(window.RESIDENT_FEEDBACK_CONFIG||{}).MAX_FILE_SIZE_BYTES || 10*1024*1024; if(files.length>5){ RF.qs('#filesInput').value=''; RF.toast('ניתן להעלות עד 5 קבצים'); return; } const bad=files.find(f=>f.size>max); if(bad){ RF.qs('#filesInput').value=''; RF.toast(`קובץ גדול מהמותר: ${bad.name}`); return; } RF.qs('#filePreview').innerHTML=files.map(f=>`<span class="file-chip">${RF.esc(f.name)} · ${(f.size/1024/1024).toFixed(2)}MB</span>`).join(''); }
 function formDataObj(){ const obj=Object.fromEntries(new FormData(RF.qs('#feedbackForm')).entries()); obj.feedbackTypes=checked('feedbackTypes'); obj.relatedTopics=checked('relatedTopics'); obj.fileCategory=RF.qs('#fileCategory').value; obj.planUrl=selectedPlan?.planUrl || ''; return obj; }
 function renderSummary(){ const p=formDataObj(); RF.qs('#summaryBox').innerHTML=`<b>מבנה ${RF.esc(p.buildingNumber)} / דירה ${RF.esc(p.unitNumber)}</b><br>${RF.esc(p.description||'')}<br><span class="muted">סוגי התייחסות: ${RF.esc((p.feedbackTypes||[]).join(', '))}</span>`; }
-async function submitFeedback(ev){ ev.preventDefault(); if(!validateStep()) return; const payload=formDataObj(); RF.qs('#submitBtn').disabled=true; RF.qs('#saveState').textContent='שולח...'; try{ const saved=await RF.post('submitFeedback', payload); await uploadFiles(saved.feedbackId, payload); RF.qs('#saveState').textContent='נשלח בהצלחה'; RF.qs('#feedbackForm').innerHTML=`<div class="thanks"><h2>ההתייחסות התקבלה</h2><p>תודה. מספר פנייה: <b>${RF.esc(saved.feedbackId)}</b></p><p>צוות הפרויקט יסווג ויטפל בהתייחסות בהתאם להשפעה תכנונית, ביצועית, בטיחותית או בקשה להבהרה.</p></div>`; }catch(e){ RF.showAlert('#alert', e.message, 'error'); RF.qs('#saveState').textContent='שגיאה בשליחה'; RF.qs('#submitBtn').disabled=false; } }
+async function submitFeedback(ev){ ev.preventDefault(); if(!validateStep()) return; const payload=formDataObj(); RF.qs('#submitBtn').disabled=true; RF.qs('#saveState').textContent='שולח...'; try{ const saved=await RF.post('submitFeedback', payload); await uploadFiles(saved.feedbackId, payload); RF.qs('#saveState').textContent='נשלח בהצלחה'; RF.qs('#feedbackForm').innerHTML=`<div class="thanks"><span class="thanks-icon">✅</span><h2>ההתייחסות התקבלה!</h2><p>תודה על מילוי הטופס. ההתייחסות שלך תועבר לצוות הפרויקט לבדיקה.</p><p>מספר פנייה:<br><span class="feedback-id">${RF.esc(saved.feedbackId)}</span></p><p>צוות הפרויקט יסווג ויטפל בהתייחסות בהתאם להשפעה תכנונית, ביצועית, בטיחותית או בקשה להבהרה.</p></div>`; }catch(e){ RF.showAlert('#alert', e.message, 'error'); RF.qs('#saveState').textContent='שגיאה בשליחה'; RF.qs('#submitBtn').disabled=false; } }
 async function uploadFiles(feedbackId,payload){ const files=[...RF.qs('#filesInput').files]; if(!files.length) return; const encoded=await Promise.all(files.map(fileToDataUrl)); return RF.post('uploadFiles',{feedbackId,buildingNumber:payload.buildingNumber,unitNumber:payload.unitNumber,submitterName:payload.submitterName,fileCategory:payload.fileCategory,files:encoded}); }
 function fileToDataUrl(file){ return new Promise((resolve,reject)=>{ const r=new FileReader(); r.onload=()=>resolve({name:file.name,size:file.size,type:file.type,dataUrl:r.result}); r.onerror=reject; r.readAsDataURL(file); }); }
