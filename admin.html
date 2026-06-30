@@ -53,6 +53,11 @@
     </main>
   </div>
 
+
+  <dialog id="detailsDialog" class="details-dialog">
+    <div id="detailsBody" class="details-body"></div>
+  </dialog>
+
   <dialog id="editDialog"><form method="dialog" id="editForm"><h2>עדכון טיפול פנימי</h2><input type="hidden" name="feedbackId"><div class="grid two"><label>סיווג צוות<select name="teamClassification"><option></option><option>תכנונית</option><option>ביצועית</option><option>בטיחותית</option><option>הבהרה</option><option>לא רלוונטי</option></select></label><label>סטטוס<select name="status"><option>פתוח</option><option>בטיפול</option><option>ממתין להבהרה</option><option>נסגר</option></select></label><label>השפעה על תכנון<select name="planningImpactTeam"><option></option><option>כן</option><option>לא</option><option>לבדיקה</option></select></label><label>השפעה על ביצוע<select name="executionImpactTeam"><option></option><option>כן</option><option>לא</option><option>לבדיקה</option></select></label><label>השפעה בטיחותית<select name="safetyImpactTeam"><option></option><option>כן</option><option>לא</option><option>לבדיקה</option></select></label><label>דורש עדכון תוכנית<select name="requiresPlanUpdate"><option></option><option>כן</option><option>לא</option></select></label><label>דורש סיור שטח<select name="requiresSiteVisit"><option></option><option>כן</option><option>לא</option></select></label><label>דורש שיחה עם דייר<select name="requiresResidentCall"><option></option><option>כן</option><option>לא</option></select></label><label>דורש החלטת ועדת תכנון<select name="requiresPlanningCommittee"><option></option><option>כן</option><option>לא</option></select></label><label>אחראי טיפול<input name="owner"></label><label>תאריך יעד<input name="dueDate" type="date"></label></div><label>החלטה / מענה לדייר<textarea name="responseToResident"></textarea></label><div class="form-actions"><button class="btn secondary" value="cancel">ביטול</button><button class="btn primary" id="saveTreatmentBtn" value="default">שמירה</button></div></form></dialog>
 
   <iframe id="transportFrame" name="transportFrame" class="hidden"></iframe>

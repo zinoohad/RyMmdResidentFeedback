@@ -4,14 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>התייחסות דיירים לתכנון מיקום ממ״ד</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="public-shell">
-
-    <!-- ── Hero ── -->
     <header class="hero">
       <div class="hero-content">
         <div class="pill">פרויקט תוספת ממ״דים</div>
@@ -24,42 +20,30 @@
 
     <main class="form-layout">
       <section id="alert" class="alert hidden"></section>
-
-      <!-- ── Progress ── -->
-      <section class="progress-card">
-        <div class="progress-header">
-          <div class="progress-step-info">
-            <span class="step-badge" id="stepLabel">שלב 1 מתוך 8</span>
-          </div>
-          <span id="saveState">טרם נשלח</span>
-        </div>
+      <section class="card progress-card">
+        <div class="progress-title"><span id="stepLabel">שלב 1 מתוך 8</span><span id="saveState">לא נשלח</span></div>
         <div class="progress"><i id="progressBar"></i></div>
-        <div class="steps-dots" id="stepsDots"></div>
       </section>
 
-      <!-- ── Form ── -->
-      <form id="feedbackForm" autocomplete="off">
-
-        <!-- Step 1 -->
+      <form id="feedbackForm" class="card" autocomplete="off">
         <section class="step active" data-step="1">
-          <h2>פרטי זיהוי</h2>
+          <h2>1. פרטי זיהוי</h2>
           <div class="grid two">
-            <label>שם ממלא הטופס<input name="submitterName" placeholder="שם מלא" required /></label>
-            <label>טלפון ליצירת קשר<input name="phone" placeholder="05X-XXXXXXX" required inputmode="tel" /></label>
-            <label>כתובת דוא״ל<input name="email" type="email" placeholder="example@mail.com" /></label>
-            <label>אזור / שכונה<select name="area" id="areaSelect" required><option value="">בחר אזור</option></select></label>
+            <label>שם ממלא הטופס<input name="submitterName" required /></label>
+            <label>טלפון ליצירת קשר<input name="phone" required inputmode="tel" /></label>
+            <label>כתובת דוא״ל<input name="email" type="email" /></label>
+            <label>אזור / שכונה<select name="area" id="areaSelect" required></select></label>
             <label>מספר מבנה<select name="buildingNumber" id="buildingNumber" required><option value="">בחר אזור קודם</option></select></label>
             <label>מספר דירה / יחידה<select name="unitNumber" id="unitNumber" required><option value="">בחר מבנה קודם</option></select></label>
             <label>האם אתה הדייר המתגורר בדירה?<select name="residentRelation" required><option value="">בחר</option><option>כן</option><option>לא</option><option>אחר</option></select></label>
           </div>
-          <p class="hint">הרשימות נשלפות אוטומטית מגיליון דיירים בקובץ ה־Google Sheets.</p>
-          <button type="button" class="btn ghost" id="loadPlanBtn" style="margin-top:14px">🔍 בדיקת תוכנית לפי מבנה / דירה</button>
+          <p class="hint">הרשימות נשלפות אוטומטית מגיליון <b>דיירים</b> בקובץ ה־Google Sheets. אין צורך להזין שמות משפחה.</p>
+          <button type="button" class="btn ghost" id="loadPlanBtn">בדיקת תוכנית לפי מבנה / דירה</button>
           <div id="planResult" class="plan-result"></div>
         </section>
 
-        <!-- Step 2 -->
         <section class="step" data-step="2">
-          <h2>אישור צפייה בתוכנית</h2>
+          <h2>2. אישור צפייה בתוכנית</h2>
           <div class="grid two">
             <label>האם הוצגה לך תוכנית מיקום הממ״ד הרלוונטית לדירה / למבנה שלך?<select name="planPresented" required><option value="">בחר</option><option>כן</option><option>לא</option></select></label>
             <label>האם המיקום המוצע ברור לך?<select name="planClear" required><option value="">בחר</option><option>כן</option><option>לא</option><option>חלקית</option></select></label>
@@ -68,10 +52,9 @@
           <p class="hint">אם נדרש הסבר נוסף, ההתייחסות תסומן אוטומטית גם כבקשה להבהרה / הסבר.</p>
         </section>
 
-        <!-- Step 3 -->
         <section class="step" data-step="3">
-          <h2>סוג ההתייחסות</h2>
-          <p class="hint" style="margin-bottom:14px">ניתן לבחור יותר מאפשרות אחת. זה שדה קריטי לסיווג נכון.</p>
+          <h2>3. סוג ההתייחסות</h2>
+          <p class="hint">ניתן לבחור יותר מאפשרות אחת. זה שדה קריטי לסיווג נכון.</p>
           <div class="checks" data-name="feedbackTypes">
             <label><input type="checkbox" value="הערה תכנונית"> הערה תכנונית</label>
             <label><input type="checkbox" value="הערה ביצועית"> הערה ביצועית</label>
@@ -85,22 +68,19 @@
           </div>
         </section>
 
-        <!-- Step 4 -->
         <section class="step" data-step="4">
-          <h2>פירוט ההתייחסות</h2>
+          <h2>4. פירוט ההתייחסות</h2>
           <div class="grid two">
-            <label>תאר/י את ההתייחסות בצורה ברורה<textarea name="description" placeholder="פרט/י את ההתייחסות..." required></textarea></label>
-            <label>איפה בדיוק נמצאת הבעיה / ההערה?<textarea name="locationDescription" placeholder="תאר/י את המיקום בדירה / בחצר..." required></textarea></label>
+            <label>תאר/י את ההתייחסות בצורה ברורה<textarea name="description" required></textarea></label>
+            <label>איפה בדיוק נמצאת הבעיה / ההערה?<textarea name="locationDescription" required></textarea></label>
             <label>האם לדעתך הנושא משפיע על מיקום הממ״ד?<select name="planningImpactResident" required><option value="">בחר</option><option>כן</option><option>לא</option><option>לא יודע</option></select></label>
             <label>האם לדעתך הנושא משפיע על אופן הביצוע?<select name="executionImpactResident" required><option value="">בחר</option><option>כן</option><option>לא</option><option>לא יודע</option></select></label>
             <label>האם לדעתך קיימת כאן בעיית בטיחות?<select name="safetyImpactResident" required><option value="">בחר</option><option>כן</option><option>לא</option><option>לא יודע</option></select></label>
           </div>
         </section>
 
-        <!-- Step 5 -->
         <section class="step" data-step="5">
-          <h2>נושאים ספציפיים לבדיקה</h2>
-          <p class="hint" style="margin-bottom:14px">סמן/י את כל הנושאים הרלוונטיים להתייחסות.</p>
+          <h2>5. נושאים ספציפיים לבדיקה</h2>
           <div class="checks compact" data-name="relatedTopics">
             <label><input type="checkbox" value="חלון קיים"> חלון קיים</label>
             <label><input type="checkbox" value="דלת / מעבר"> דלת / מעבר</label>
@@ -121,68 +101,43 @@
           </div>
         </section>
 
-        <!-- Step 6 -->
         <section class="step" data-step="6">
-          <h2>העלאת תמונות / קבצים</h2>
-          <p class="hint" style="margin-bottom:14px">ניתן לצרף תמונות של האזור הרלוונטי, תשתיות קיימות, צמחייה, פירוקים נדרשים, פתחים, מעברים או כל פרט אחר שיכול לעזור להבין את ההתייחסות.</p>
+          <h2>6. העלאת תמונות / קבצים</h2>
+          <p class="hint">ניתן לצרף תמונות של האזור הרלוונטי, תשתיות קיימות, צמחייה, פירוקים נדרשים, פתחים, מעברים או כל פרט אחר שיכול לעזור להבין את ההתייחסות.</p>
           <div class="upload-box">
-            <label style="margin-bottom:14px">סוג הקובץ / התמונה
-              <select id="fileCategory">
-                <option>כללי</option>
-                <option>מיקום ממ״ד</option>
-                <option>תשתיות</option>
-                <option>גישה</option>
-                <option>צמחייה / עצים</option>
-                <option>פירוקים</option>
-                <option>פנים הדירה</option>
-                <option>בטיחות</option>
-              </select>
-            </label>
-            <label>בחירת קבצים
-              <input id="filesInput" type="file" multiple accept="image/*,application/pdf" />
-            </label>
-            <p class="hint" style="margin-top:10px">📎 עד 5 קבצים, עד 10MB לכל קובץ. תמונות ו־PDF.</p>
+            <label>סוג הקובץ / התמונה<select id="fileCategory"><option>כללי</option><option>מיקום ממ״ד</option><option>תשתיות</option><option>גישה</option><option>צמחייה / עצים</option><option>פירוקים</option><option>פנים הדירה</option><option>בטיחות</option></select></label>
+            <label>בחירת קבצים<input id="filesInput" type="file" multiple accept="image/*,application/pdf" /></label>
+            <p class="hint">עד 5 קבצים, עד 10MB לכל קובץ. סוגי קבצים: תמונות ו־PDF.</p>
           </div>
           <div id="filePreview" class="file-preview"></div>
         </section>
 
-        <!-- Step 7 -->
         <section class="step" data-step="7">
-          <h2>רמת דחיפות / חשיבות</h2>
-          <label style="max-width:520px">עד כמה הנושא לדעתך מהותי?
-            <select name="importance" required>
-              <option value="">בחר</option>
-              <option>מהותי מאוד — עלול למנוע ביצוע / להשפיע על בטיחות</option>
-              <option>מהותי — דורש בדיקה לפני ביצוע</option>
-              <option>בינוני — חשוב להתייחסות אך לא בהכרח מעכב</option>
-              <option>נמוך — בקשה / הערה כללית</option>
-              <option>לא יודע</option>
-            </select>
-          </label>
+          <h2>7. רמת דחיפות / חשיבות</h2>
+          <label>עד כמה הנושא לדעתך מהותי?<select name="importance" required>
+            <option value="">בחר</option>
+            <option>מהותי מאוד — עלול למנוע ביצוע / להשפיע על בטיחות</option>
+            <option>מהותי — דורש בדיקה לפני ביצוע</option>
+            <option>בינוני — חשוב להתייחסות אך לא בהכרח מעכב</option>
+            <option>נמוך — בקשה / הערה כללית</option>
+            <option>לא יודע</option>
+          </select></label>
         </section>
 
-        <!-- Step 8 -->
         <section class="step" data-step="8">
-          <h2>סיכום ואישור</h2>
-          <label class="approval">
-            <input name="approval" type="checkbox" value="מאשר/ת" required>
-            אני מאשר/ת שההתייחסות נמסרת לטובת בדיקת צוות הפרויקט, וכי צוות הפרויקט יסווג את ההתייחסות לפי השפעה תכנונית, ביצועית, בטיחותית או בקשה להבהרה.
-          </label>
+          <h2>8. סיכום ואישור</h2>
+          <label class="approval"><input name="approval" type="checkbox" value="מאשר/ת" required> אני מאשר/ת שההתייחסות נמסרת לטובת בדיקת צוות הפרויקט, וכי צוות הפרויקט יסווג את ההתייחסות לפי השפעה תכנונית, ביצועית, בטיחותית או בקשה להבהרה.</label>
           <div class="summary-box" id="summaryBox"></div>
         </section>
 
-        <!-- ── Actions ── -->
         <div class="form-actions">
-          <button type="button" class="btn secondary" id="prevBtn">→ חזרה</button>
-          <div class="form-actions-right">
-            <button type="button" class="btn primary" id="nextBtn">המשך ←</button>
-            <button type="submit" class="btn primary hidden" id="submitBtn">✉ שליחת התייחסות</button>
-          </div>
+          <button type="button" class="btn secondary" id="prevBtn">חזרה</button>
+          <button type="button" class="btn primary" id="nextBtn">המשך</button>
+          <button type="submit" class="btn primary hidden" id="submitBtn">שליחת התייחסות</button>
         </div>
       </form>
     </main>
   </div>
-
   <iframe id="transportFrame" name="transportFrame" class="hidden"></iframe>
   <div id="toast" class="toast hidden"></div>
   <script src="config.js"></script>
